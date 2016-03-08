@@ -7,7 +7,7 @@ int N, L;
 int ts;
 vector<vector<int> > G; //graph
 vector<int> d; //starting time
-vector<int> low; //minimum acessible element
+vector<int> low; //minimum non-parent acessible starting time
 vector<int> pi; //parent
 vector<bool> AP; //É Articulation Point?
 
@@ -23,9 +23,8 @@ int dfs(int u) {
       ret++;
       pi[v] = u;
       dfs(v);
-      if (low[v] >= d[u]) { //Condição suficiente para ser AP para nós que não sejam a raíz
+      if (low[v] >= d[u]) //Condição suficiente para ser AP para nós que não sejam a raíz
         AP[u] = true;
-      }
       low[u] = min(low[u], low[v]);
     } else if (v != pi[u]) {
       low[u] = min(low[u], d[v]);
@@ -54,11 +53,9 @@ int main() {
   ts   = 1;
 
   /* Chama a DFS: */
-  for (int u=0; u<N; u++) {
-    if (d[u] == 0) {
+  for (int u=0; u<N; u++)
+    if (d[u] == 0)
       AP[u] = dfs(u) > 1; //Condição de aticulation point para raízes de àrvore
-    }
-  }
 
   /* Imprime os resultados: */
   int apCount = 0;
