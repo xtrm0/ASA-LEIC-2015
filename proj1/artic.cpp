@@ -2,8 +2,6 @@
 #include <vector>
 #include <algorithm>
 using namespace std;
-enum Color {WHITE, GRAY, BLACK};
-
 /*Variáveis globais para diminuir overhead em function calls*/
 int N, L;
 int ts;
@@ -11,19 +9,17 @@ vector<vector<int> > G; //graph
 vector<int> d; //starting time
 vector<int> low; //minimum acessible element
 vector<int> pi; //parent
-vector<Color> color; //color
 vector<bool> AP; //É Articulation Point?
 
 /* dfs: Corre o dfs-visit do algoritmo de Tarjan
  * Devolve: O número de filhos na àrvore DFS */
 int dfs(int u) {
   int ret=0;
-  color[u] = GRAY;
   low[u] = d[u] = ts;
   ++ts;
   for (vector<int>::iterator it = G[u].begin(); it != G[u].end(); it++) {
     int v = *it;
-    if (color[v] == WHITE) {
+    if (d[v]==0) {
       ret++;
       pi[v] = u;
       dfs(v);
@@ -35,7 +31,6 @@ int dfs(int u) {
       low[u] = min(low[u], d[v]);
     }
   }
-  color[u] = BLACK;
   return ret;
 }
 
@@ -55,13 +50,12 @@ int main() {
   d    = vector<int>(N, 0);
   low  = vector<int>(N, 0);
   pi   = vector<int>(N, -1);
-  color= vector<Color>(N, WHITE);
   AP   = vector<bool>(N, false);
   ts   = 1;
 
   /* Chama a DFS: */
   for (int u=0; u<N; u++) {
-    if (color[u] == WHITE) {
+    if (d[u] == 0) {
       AP[u] = dfs(u) > 1; //Condição de aticulation point para raízes de àrvore
     }
   }
@@ -76,12 +70,11 @@ int main() {
       last = u;
     }
   }
+  first++; last++;
 
   cout << apCount << endl;
-  if (apCount != 0) {
-    first++; last++;
+  if (apCount != 0)
     cout << first << " " << last << endl;
-  } else {
+  else
     cout << "-1" << " " << "-1" << endl;
-  }
 }
