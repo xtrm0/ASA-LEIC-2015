@@ -20,14 +20,19 @@ Sendo o problema um cuja solução foi estudada nas aulas, utilizámos o algorit
 
 ### Explicação do algoritmo
 > TODO
+
 ### Prova de correção do algoritmo
 > TODO (provar que o algoritmo funciona)
+
 ### Análise assintótica temporal téorica do algoritmo
 > TODO
+
 ### Análise assintótica temporal experimental do algoritmo
 > TODO
+
 ### Análise assintótica espacial
 > TODO (ez pea z)
+
 ### Prova de otimalidade do algoritmo
 > TODO (provar que o algoritmo é ótimo assintóticamente) (fácil)
 
