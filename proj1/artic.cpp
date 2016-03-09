@@ -20,15 +20,15 @@ vector<bool> AP; //É Articulation Point?
  */
 int dfs(int u) {
   int ret=0;
-  low[u] = d[u] = ts; //define o start time do nó
+  low[u] = d[u] = ts; //define o start time do vértice
   ++ts;
   for (vector<int>::iterator it = G[u].begin(); it != G[u].end(); it++) {
     int v = *it;
     if (d[v] == 0) { //Se ainda não foi visitado:
-      ret++; //aumenta o numero de filhos na arvore dfs do no u
+      ret++; //aumenta o numero de filhos na arvore dfs do vértice u
       pi[v] = u; //define o pai de v como sendo u
       dfs(v); //corre o dfs-visit em v
-      if (low[v] >= d[u]) //Condição suficiente para ser AP para nós que não sejam a raíz
+      if (low[v] >= d[u]) //Condição suficiente para ser AP para vértices que não sejam a raíz
         AP[u] = true;
       low[u] = min(low[u], low[v]);
     } else if (v != pi[u]) {

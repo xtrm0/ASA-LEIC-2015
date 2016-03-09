@@ -1,12 +1,13 @@
 #!/bin/bash
 #ficheiro que corre todos os testes automaticamente no pc
 set -e
-TESTDIR="./randomTests"
+#TESTDIR="./randomTests"
+TESTDIR="./tests"
 CURR=`pwd`
 
 #compila
 echo -ne "\e[34mCompiling... "
-g++ -Wall -O3 -Ofast ./artic.cpp && echo -e "\e[32mok" || exit 1
+g++ -Wall -O3 -Ofast -std=c++11 ./artic.cpp && echo -e "\e[32mok" || exit 1
 
 #corre os testes:
 cd $TESTDIR

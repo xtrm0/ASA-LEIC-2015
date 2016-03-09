@@ -16,7 +16,7 @@ forma de partilha de informação entre qualquer par de pessoas")
 Assim, o problema descrito é equivalente ao de encontrar num grafo conexo G(V,E), com N = #V e L = #E, vértices que se forem removidos tornam o grafo desconexo, ou seja, de encontrar vértices de corte (articulation points).
 
 ### Algoritmo utilizado
-Sendo o problema um cuja solução foi estudada nas aulas, utilizámos o algoritmo dado nas aulas - o algoritmo de Tarjan para encontrar vértices de corte.
+Sendo o problema um cuja solução foi estudada nas aulas, utilizámos o algoritmo dado nas aulas - o algoritmo de Tarjan para encontrar vértices de corte - descrito como _biconnected components algorithm_ em [1].
 
 ### Explicação do algoritmo
 > TODO
@@ -43,3 +43,6 @@ Na implementação do algoritmo, foram feitas algumas modificação ao algoritmo
 
 ### Conclusão
 > TODO
+
+### Bibliografia
+[1] John Hopcroft and Robert Tarjan. 1973. Algorithm 447: efficient algorithms for graph manipulation. Commun. ACM 16, 6 (June 1973), 372-378. DOI=http://dx.doi.org/10.1145/362248.362272
