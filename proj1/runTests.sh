@@ -6,7 +6,7 @@ CURR=`pwd`
 
 #compila
 echo -ne "\e[34mCompiling... "
-g++ -Wall -O3 -Ofast ./artic.cpp && echo -e "\e[32mok"
+g++ -Wall -O3 -Ofast ./artic.cpp && echo -e "\e[32mok" || exit
 
 #corre os testes:
 cd $TESTDIR
@@ -20,7 +20,7 @@ for i in $( ls | grep ".in" );
                 echo -ne "\e[36m$TEST.in: "
                 tput sgr0
                 ./../a.out < "$TEST.in" > out
-                diff "$TEST.out" out | colordiff && echo -e "\e[32mok"
+                diff "$TEST.out" out | colordiff && echo -e "\e[32mok" || exit
         done
 
 #corre para obter informação de profiling

@@ -15,7 +15,7 @@ vector<bool> AP; //É Articulation Point?
  * Devolve: O número de filhos na àrvore DFS
 
  * O código é baseado no algoritmo dfs do ch22.pdf das aulas teóricas,
- adicionando a parte referente à procura de filhos, e usando o vetor d para
+ adicionando a parte da procura de Articulation Points, e usando o vetor d para
  guardar informação sobre a cor (havendo apenas as cores branco e preto).
  */
 int dfs(int u) {
@@ -39,6 +39,9 @@ int dfs(int u) {
 }
 
 int main() {
+  /* Faz o IO ser tão mais rápido: */
+  ios_base::sync_with_stdio(0);cin.tie(0);
+
   /* Processa o input */
   cin >> N >> L;
   G = vector<vector<int> >(N, vector<int>());
