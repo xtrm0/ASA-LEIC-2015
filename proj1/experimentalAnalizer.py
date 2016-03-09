@@ -12,7 +12,7 @@ if (os.system("./runTests.sh y > tmp")!=0):
     print "Error running runTests.sh!"
     os._exit(1)
 
-with open("tmp") as f:
+with open("tmp", "r") as f:
     inp = f.read().split("$")[1].strip()
 
 inp = inp.split("\n")[1:]
@@ -26,12 +26,12 @@ while(True):
     N = int(inp[i+1].split(":")[1].strip())
     L = int(inp[i+2].split(":")[1].strip())
     I = int(inp[i+3].split(":")[1].strip())
-    x += [min(N,L)]
+    x += [max(N,L)]
     y += [I]
     i+=4
 
-print x
-print y
+#print x
+#print y
 plt.plot(x,y,'ro')
 z = np.polyfit(x, y, 1)
 print "y=mx + b: [m, b] = ", z

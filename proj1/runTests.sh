@@ -1,7 +1,7 @@
 #!/bin/bash
 #ficheiro que corre todos os testes automaticamente no pc
 set -e
-TESTDIR="./tests"
+TESTDIR="./randomTests"
 CURR=`pwd`
 
 #compila
@@ -10,6 +10,8 @@ g++ -Wall -O3 -Ofast ./artic.cpp && echo -e "\e[32mok" || exit 1
 
 #corre os testes:
 cd $TESTDIR
+
+if [ -z "$1" ]; then
 echo
 echo -ne "\e[34m"
 echo "Running tests... "
@@ -22,6 +24,7 @@ for i in $( ls | grep ".in" );
                 ./../a.out < "$TEST.in" > out
                 diff "$TEST.out" out | colordiff && echo -e "\e[32mok" || exit 1
         done
+fi;
 
 #corre para obter informação de profiling
 if [ -n "$1" ]; then
