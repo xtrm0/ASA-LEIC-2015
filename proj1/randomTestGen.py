@@ -8,13 +8,13 @@ maxN = 5000
 maxL = 1000000
 minN = 2
 minL = 0
-count = 100
+K = 100
 os.system("rm -rf ./randomTests/")
 os.system("mkdir ./randomTests/")
 
-for i in range(count):
-    if (i%(count/10)==0):
-        print i, "/", count
+for i in range(K):
+    if (i%(K/10)==0):
+        print i, "/", K
     N = random.randint(minN,maxN+1)
     factr = (N*(N-1)/2)
     L = random.randint(min(minL,factr-1),min(maxL, factr))
