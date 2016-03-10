@@ -37,7 +37,7 @@ O algoritmo visita cada vértice exatamente uma vez. A função de visita tem co
 Assim, a complexidade do algoritmo é O(max(N,L)) = O(N+L)
 
 ### Análise assintótica temporal experimental do algoritmo
-Para se realizar a análise experimental temporal do algoritmo, foi utilizada a aproximação que cada instrução de C corresponde em média a um número fixo de instruções de CPU (que é aceitável). Assim, em primeiro lugar procedeu-se à geração de K diferentes casos de tests aleatórios (usando randomTestGen.py). De seguida, para cada caso de teste foi utilizada a ferramenta perf para contar o número de instruções de CPU utilizadas em modo utilizador durante a execução do program - I (runTests.sh). Por fim, fez-se o plot do gráfico de I em função de max(N,L). Obteve-se assim seguinte gráfico:
+Para se realizar a análise experimental temporal do algoritmo, foi utilizada a aproximação que cada instrução de C corresponde em média a um número fixo de instruções de CPU (que é aceitável). Assim, em primeiro lugar procedeu-se à geração de K diferentes casos de tests aleatórios (usando randomTestGen.py). De seguida, para cada caso de teste foi utilizada a ferramenta perf para contar o número de instruções de CPU utilizadas em modo utilizador durante a execução do program - I (runTests.sh). Por fim, fez-se o plot do gráfico de I em função de max(N,L) (experimentalAnalizer.py). Obteve-se assim seguinte gráfico:
 ![Gráfico 1](analiseExp.png)
 
 > TODO: add caption

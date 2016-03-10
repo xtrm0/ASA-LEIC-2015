@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 '''
     Este código serve para fazer os gráficos da análise experimental da
-    complexidade do algoritmo em função de min(N,L)
+    complexidade do algoritmo em função de max(N,L)
 '''
 import os
 import matplotlib.pyplot as plt

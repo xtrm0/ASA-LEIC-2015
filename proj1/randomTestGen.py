@@ -1,5 +1,8 @@
 #!/usr/bin/python2
 # -*- coding: utf-8 -*-
+'''
+    Gera grafos aleatórios
+'''
 import os
 import random
 random.seed()
