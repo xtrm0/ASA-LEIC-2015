@@ -6,9 +6,9 @@ using namespace std;
 int N, L;
 int ts;
 vector<vector<int> > G; //graph
-vector<int> d; //starting time
+vector<int> disco; //discovery time
 vector<int> low; //minimum non-parent acessible starting time
-vector<int> pi; //parent
+vector<int> parent; //parent
 vector<bool> AP; //É Articulation Point?
 
 /* dfs: Corre o dfs-visit do algoritmo de Tarjan
@@ -20,26 +20,26 @@ vector<bool> AP; //É Articulation Point?
  */
 int dfs(int u) {
   int ret=0;
-  low[u] = d[u] = ts; //define o start time do vértice
+  low[u] = disco[u] = ts; //define o start time do vértice
   ++ts;
   for (vector<int>::iterator it = G[u].begin(); it != G[u].end(); it++) {
     int v = *it;
-    if (d[v] == 0) { //Se ainda não foi visitado:
+    if (disco[v] == 0) { //Se ainda não foi visitado:
       ret++; //aumenta o numero de filhos na arvore dfs do vértice u
-      pi[v] = u; //define o pai de v como sendo u
+      parent[v] = u; //define o pai de v como sendo u
       dfs(v); //corre o dfs-visit em v
-      if (low[v] >= d[u]) //Condição suficiente para ser AP para vértices que não sejam a raíz
+      if (low[v] >= disco[u]) //Condição suficiente para ser AP para vértices que não sejam a raíz
         AP[u] = true;
       low[u] = min(low[u], low[v]);
-    } else if (v != pi[u]) {
-      low[u] = min(low[u], d[v]);
+    } else if (v != parent[u]) {
+      low[u] = min(low[u], disco[v]);
     }
   }
   return ret;
 }
 
 int main() {
-  /* Faz o IO ser tão mais rápido: */
+  /* Faz o IO ser tão mais ráparentdo: */
   ios_base::sync_with_stdio(0);cin.tie(0);
 
   /* Processa o input */
@@ -54,16 +54,15 @@ int main() {
   }
 
   /* Inicializa as estruturas da DFS: */
-  d    = vector<int>(N, 0);
-  low  = vector<int>(N, 0);
-  pi   = vector<int>(N, -1);
-  AP   = vector<bool>(N, false);
-  ts   = 1;
+  disco  = vector<int>(N, 0);
+  low    = vector<int>(N, 0);
+  parent = vector<int>(N, -1);
+  AP     = vector<bool>(N, false);
+  ts     = 1;
 
-  /* Chama a DFS: */
-  for (int u=0; u<N; u++)
-    if (d[u] == 0)
-      AP[u] = dfs(u) > 1; //Condição de articulation point para raízes de àrvore
+  /* Chama a DFS:
+    Como temos a garantia de apenas 1 componente fica assim:  */
+  AP[0] = dfs(0) > 1; //Condição de articulation point para raízes de àrvore
 
   /* Imprime os resultados: */
   int apCount = 0;
