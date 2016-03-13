@@ -1,21 +1,20 @@
 #!/usr/bin/python2
 # -*- coding: utf-8 -*-
 '''
-    Gera grafos aleatórios com base em intervalos para N e L
+    Gera grafos aleatórios com densidade predifinda
 '''
 import os
 import random
 random.seed()
-testsDir = "randomTests"
-maxN = 10000
-maxL = 10000000
-minN = 2
-minL = 0
+testsDir = "randomTests_1.0"
+density = 1
+maxN = 1000
+minN = int(2/density) + 2
 K = 1000
 os.system("rm -rf ./" + testsDir + "/")
 os.system("mkdir ./" + testsDir + "/")
 
-
+#Isto não fica muito lento para densidades grandes devido ao birthday paradox
 def genGraph(N, L):
     V = set()
     for i in range(1,N):
@@ -41,10 +40,7 @@ for i in range(K):
     if (i%(K/10)==0):
         print i, "/", K
     N = random.randint(minN,maxN+1)
-    factr = (N*(N-1)/2)
-    L_left  = max(min(minL,factr), N-1)
-    L_rigth = max(min(maxL, factr), N-1)
-    L = random.randint(L_left, L_rigth)
+    L = int(density * N * (N-1) / 2)
     print N, L
     V = genGraph(N,L)
 

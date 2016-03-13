@@ -39,42 +39,40 @@ int dfs(int u) {
 }
 
 int main() {
-  /* Faz o IO ser tão mais ráparentdo: */
+  /* Faz o IO ser mais rápido: */
   ios_base::sync_with_stdio(0);cin.tie(0);
 
   /* Processa o input */
   cin >> N >> L;
-  G = vector<vector<int> >(N, vector<int>());
-  for (int i=0; i<L; i++) {
+  G = vector<vector<int> >(N+1, vector<int>());
+  for (int i=1; i<=L; i++) {
     int u, v;
     cin >> u >> v;
-    u--; v--;
     G[u].push_back(v);
     G[v].push_back(u);
   }
 
   /* Inicializa as estruturas da DFS: */
-  disco  = vector<int>(N, 0);
-  low    = vector<int>(N, 0);
-  parent = vector<int>(N, -1);
-  AP     = vector<bool>(N, false);
+  disco  = vector<int>(N+1, 0);
+  low    = vector<int>(N+1, 0);
+  parent = vector<int>(N+1, -1);
+  AP     = vector<bool>(N+1, false);
   ts     = 1;
 
   /* Chama a DFS:
     Como temos a garantia de apenas 1 componente fica assim:  */
-  AP[0] = dfs(0) > 1; //Condição de articulation point para raízes de àrvore
+  AP[1] = dfs(1) > 1; //Condição de articulation point para raízes de àrvore
 
   /* Imprime os resultados: */
   int apCount = 0;
   int first=-1, last=-1;
-  for (int u=0; u<N; u++) {
+  for (int u=1; u<=N; u++) {
     if (AP[u]) {
       apCount++;
       if (first == -1) first = u;
       last = u;
     }
   }
-  first++; last++;
 
   cout << apCount << endl;
   if (apCount != 0)
