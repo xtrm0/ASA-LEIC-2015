@@ -7,7 +7,7 @@ import os
 import random
 random.seed()
 testsDir = "randomTests"
-maxN = 10000
+maxN = 1000
 maxL = 10000000
 minN = 2
 minL = 0

@@ -2,7 +2,7 @@
 #ficheiro que corre todos os testes automaticamente no pc
 set -e
 #TESTDIR="./randomTests"
-TESTDIR="randomTests_1.0"
+TESTDIR="tests"
 CURR=`pwd`
 
 #compila

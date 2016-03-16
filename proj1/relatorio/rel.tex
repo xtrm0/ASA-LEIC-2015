@@ -3,15 +3,17 @@
 \usepackage{amsmath}
 \usepackage{mathtools}
 \usepackage{cleveref}
-\usepackage{tikz}
-\usepackage{circuitikz}
 \usepackage{pgfplots}
 \usepackage{graphicx}
 \usepackage{wrapfig}
 \usepackage{fancyref}
 \usepackage{amssymb}
+\usepackage{subfig}
+\usepackage{float}
 \usepackage[justification=RaggedRight, singlelinecheck=false, font={footnotesize}]{caption}
 \usepackage[portuguese]{babel}
+\usepackage[title,titletoc,toc]{appendix}
+
 
 \usepackage{lipsum}
 \usepackage{blindtext}
@@ -20,26 +22,28 @@
 \begin{document}
 \pagenumbering{arabic}
 \bibliographystyle{plain}
-\begin{titlepage}
-	\begin{center}
-		{\large Universidade de Lisboa}\\[0.4cm]
-		{\large Instituto Superior Técnico}\\[0.4cm]
-		{\large Licenciatura em Engenharia Informática e de Computadores}\\[1.5cm]
-		\begin{figure}[!htb]
-			\centering
-			\includegraphics[width=0.4\textwidth]{ist.png} \\[2cm]
-		\end{figure}
-		{\bf \huge 1º Projeto}\\[2.0cm]
-		%{\bf \large  - Grupo 109}\\[1.8cm]
-		{\bf \Large Análise e Síntese de Algoritmos}\\[2.2cm]
-		{\bf \Large Grupo 109}\\[0.6cm]
-		{\large Nuno Amaro, 81824}\\[0.4cm]
-		{\large Afonso Santos, 81861}\\[2.2cm]
-		{\large Lisboa}\\[0.4cm]
-		{\large 11 de Março de 2016}
-	\end{center}
-\end{titlepage}
-
+\title{
+	\textnormal{
+	\LARGE Universidade de Lisboa - Instituto Superior Técnico\\
+	\Large Licenciatura em Engenharia Informática e de Computadores\\
+	\Large Análise e Síntese de Algoritmos
+\\}
+	\LARGE1º Projeto
+	\vspace{-1ex}
+	}
+\author{Nuno Amaro,
+	\texttt{81824}
+	\and
+	Afonso Tinoco,
+	\texttt{81861}
+}
+\date{	\vspace{-1ex}
+		\vspace{-4ex}	
+	}
+\maketitle
+%		{\large Universidade de Lisboa}\\[0.4cm]
+%		{\large Instituto Superior Técnico}\\[0.4cm]
+%		{\large Licenciatura em Engenharia Informática e de Computadores}\\[1.5cm]
 \section*{Introdução}
 Com este projeto pretendemos expor um algoritmo em tempo linear para o problema proposto, explicar a sua implementação e fazer uma análise teórica e experimental da complexidade temporal e espacial deste.
 
@@ -48,6 +52,7 @@ O problema descrito pedia que, dentro de uma rede social onde a informação pod
 
 Ora este problema pode ser descrito como um problema num grafo não direcionado, em que:
 \begin{itemize}
+\setlength\itemsep{-0.5ex}
 \item cada pessoa é um vértice da rede 
 \item uma ligação entre pessoas corresponde a uma aresta 
 \item o grafo é conexo. ("existe sempre uma forma de partilha de informação entre qualquer par de pessoas")
@@ -67,23 +72,21 @@ Tendo solução do problema sido estudada nas aulas, utilizámos o algoritmo apr
 
 \section*{Estruturas utilizadas:}
 \begin{itemize}
-\item \textbf{G[i][j]} - O grafo $G$ foi representado como uma lista de adjacências (foi utilizado um std::vector (array dinâmica) em vez de std::list (lista duplamente ligada), pelo facto de a implementação do std::vector ser bastante mais eficiente que a de std::list para este caso). 
+\setlength\itemsep{-0.5ex}
+\item \textbf{G[$u$][i]} - O grafo $G$ foi representado como uma lista de adjacências (foi utilizado um std::vector (array dinâmica) em vez de std::list (lista duplamente ligada), pelo facto de a implementação do std::vector ser bastante mais eficiente que a de std::list para este caso). 
 
-> TODO: Adicionar referência a demonstrar que o std::vector é mais eficiente que o std::list
-\item \textbf{disco[i]} - tempo de descoberta do vértice i
-\item \textbf{low[i]} - tempo do mínimo valor de descoberta alcançável sem usar a aresta que retorna ao pai na àrvore DFS a partir do vértice i
-\item \textbf{parent[i]} - vértice pai do vértice i na àrvore DFS
-\item \textbf{AP[i]} - o vértice i é Articulation Point?
+\item \textbf{disco[$u$]} - tempo de descoberta do vértice $u$
+\item \textbf{low[$u$]} - tempo do mínimo valor de descoberta alcançável sem usar a aresta que retorna ao pai na àrvore DFS a partir do vértice $u$
+\item \textbf{parent[$u$]} - vértice pai do vértice $u$ na àrvore DFS
+\item \textbf{AP[$u$]} - o vértice $u$ é Articulation Point?
 \end{itemize}
-Todas estas estruturas foram implementadas com o std::vector de C++ que tem tempo de inserção no fim $O(1+)$ e de acesso $O(1)$. Com tempo de inserção $O(1+)$ (constante amortizado), queremos dizer que para inserir $N$ elementos a complexidade de pior caso é $O(N)$, apesar da complexidade de pior caso de inserção de 1 elemento não ser $O(1)$ (de facto é também $O(N)$).
-
-> TODO: Inserir referência para a definição de vector de stl
+Todas estas estruturas foram implementadas com o std::vector de C++ que tem tempo de inserção no fim $O(1+)$ e de acesso $O(1)$. Com tempo de inserção $O(1+)$ (constante amortizado), queremos dizer que para inserir $N$ elementos a complexidade de pior caso é $O(N)$, apesar da complexidade de pior caso de inserção de 1 elemento não ser $O(1)$ (de facto é também $O(N)$). \cite{ISOC++:2003}
 \section*{Explicação do algoritmo}
  Para o caso de um grafo conexo não-direcionado com pelo menos 2 vértices, é executada uma pesquisa em profundidade ao longo dos vértices, a partir do vértice 1. Para cada vertice visitado na DFS é guardada informação relativa ao tempo de descoberta (vetor disco) e ao valor do tempo de descoberte do nó com menor tempo de descoberta acessível a partir do nó atual utilizando apenas arestas ainda não visitadas (vetor low). Se após uma chamada recursiva retornar, o valor de low do filho visitado for superior ao do pai então o pai é um vértice de corte.
 Após todas as chamadas recursivas há um caso degenerado a considerar, que é o caso da raíz da àrvore DFS. Esta apenas será um vértice de corte, apenas se o seu número de filhos na àrvore DFS for superior a 1.
 
 \section*{Prova de correção do algoritmo}
-A demonstração do algoritmo é simples. Para cada vértice u que não seja a raiz da àrvore, e v qualquer vértice tal que parent[v] = u, low[v] representa o mínimo valor de disco atingível a partir de v utilizando apenas arestas ainda não visitadas quando v começa a ser visitado. Ora se no momento em que a chamada de DFS com parametro v vai retornar, low[v] >= disco[u], isto implica que não existe nenhum caminho entre v e os nós visitados antes de se visitar v que não utilize u, como tal u é vértice de articulação. De igual modo, se para todos os v a condição se cumpre, então para todo o v filho de u na árvore DFS existe um caminho para um nó antes de u na àrvore DFS que não utiliza u, e vice-versa e como tal u não é vértice de corte uma vez que a sua remoção não afeta a conetividade do grafo. Por fim, falta-nos analisar o caso em que u é a raíz da àrvore. Este caso, implica que se quando o primeiro filho de u, a, retornar da chamada DFS os vértices ainda não tiver sido todos visitados, então é porque não existe nenhum caminho de a para qualquer vértice que ainda não tenha sido visitado que não passe por u, logo u é vértice de corte. No caso contrário, se quando o primeiro filho de a retornar os vértices já tiverem sido todos visitados, então existe existe um caminho de todos os vértices (excepto u) para todos os vértices (excepto u) que não passa por u. Logo u não é vertice de corte. Assim a condição equivalente para a raíz ser vértice de corte é o número de filhos na àrvore DFS ser superior a 1, e temos a correção do algoritmo demonstrada.
+A demonstração do algoritmo é simples. Para cada vértice $u$ que não seja a raiz da àrvore, e $v$ qualquer vértice tal que parent[$v$] $=$ $u$, low[$v$] representa o mínimo valor de disco atingível a partir de $v$ utilizando apenas arestas ainda não visitadas quando $v$ começa a ser visitado. Ora se no momento em que a chamada de DFS com parametro $v$ vai retornar, low[$v$] $\ge$ disco[$u$], isto implica que não existe nenhum caminho entre $v$ e os nós visitados antes de se visitar $v$ que não utilize $u$, como tal $u$ é vértice de articulação. De igual modo, se para todos os $v$ a condição se cumpre, então para todo o $v$ filho de $u$ na árvore DFS existe um caminho para um nó antes de $u$ na àrvore DFS que não utiliza $u$, e vice-versa e como tal $u$ não é vértice de corte uma vez que a sua remoção não afeta a conetividade do grafo. Por fim, falta-nos analisar o caso em que $u$ é a raíz da àrvore. Este caso, implica que se quando o primeiro filho de $u$, a, retornar da chamada DFS os vértices ainda não tiver sido todos visitados, então é porque não existe nenhum caminho de a para qualquer vértice que ainda não tenha sido visitado que não passe por $u$, logo $u$ é vértice de corte. No caso contrário, se quando o primeiro filho de a retornar os vértices já tiverem sido todos visitados, então existe existe um caminho de todos os vértices (excepto $u$) para todos os vértices (excepto $u$) que não passa por $u$. Logo $u$ não é vertice de corte. Assim a condição equivalente para a raíz ser vértice de corte é o número de filhos na àrvore DFS ser superior a 1, e temos a correção do algoritmo demonstrada.
 
 \section*{Análise assintótica temporal téorica do algoritmo}
 O algoritmo visita cada vértice exatamente uma vez. A função de visita tem complexidade local (sem incluir as chamadas recursivas) de $\#(G[u])$. Assim, a complexidade de todas as chamadas pode ser descrita como $\ \sum_{i=1}^{N} \#G[i] = L$.
@@ -100,7 +103,7 @@ Para se realizar a análise experimental temporal do algoritmo, foi utilizada a 
 A análise experimental comprova o resultado teórico esperado. Sendo o quoficiente de correlação linear muito próximo de 1 para todos os exemplos.\par
 Deixamos também em anexo testes que executámos mantendo a densidade do grafo fixa [anexo A].
 \section*{Análise assintótica espacial}
-Como se verifica pelas estruturas utilizadas, o algoritmo utiliza 3 estruturas com $N$ inteiros (disco, low, parent), 1 estrutura com $N$ booleanos (AP), e uma estrutura com $N$ vetores, mas com no total $L$ inteiros lá dentro. Durante a recursividade, nunca é atingido um nível de profundidade superior a $N$, pelo que a memória de stack tem complexidade de pior caso $O(N)$ (num grafo linear). Assim a complexidade espacial será $O(N+L)$.
+Como se verifica pelas estruturas utilizadas, o algoritmo utiliza 3 estruturas com $N$ inteiros (disco, low, parent), 1 estrutura com $N$ booleanos (AP), e uma estrutura com $N$ vetores, mas com no total $L$ inteiros lá dentro. Durante a recursividade, nunca é atingido um nível de profundidade superior a $N$, pelo que a memória de stack tem complexidade de pior caso $O(N)$ (num grafo linear). Assim a complexidade espacial será $O(N+L)$. Se ignorar-mos a memória utilizada para representar o grafo, podemos dizer que o algoritmo tem complexidade espacial $O(N)$.
 
 \section*{Prova de otimalidade do algoritmo}
 Fácilmente se verifica que o algoritmo é ótimo com base no lema de que o algoritmo ótimo para verificar se um vértice é vértice de corte tem complexidade de pior caso $\Omega(N+L)$. Se para encontrarmos num grafo todos os vértices de corte tivessemos complexidade assintóticamente inferior a $O(N+L)$, então teriamos uma forma de verificar se um vértice era vértice de corte em tempo de pior caso inferior a $O(N+L)$, o que contradiz o lema, logo a complexidade estará em $\Omega (N+L)$. Pela nossa prova de correção e análise assintótica, o algoritmo de Tarjan corre em pior caso em $ O(N+L) \blacksquare$. 
@@ -109,7 +112,31 @@ Uma demonstração do lema pode-se basear no facto de não ser possível verific
 
 
 \section*{Conclusão}
-> TODO
+Foi possível descrever uma solução $O(N+L)$ e comprová-la teorica e experimentalmente. 
 
 \bibliography{ref}
+
+\section*{ANEXO A - Análise experimental para $\sigma$ fixo}
+\begin{figure}[H]
+\subfloat[Análise experimental com parâmetros $202 \le N \le 1000 $ (1000 pontos) e $\sigma = 1\%$]{
+	\includegraphics[width=0.45\linewidth]{../images/analiseExp_s1.png}
+	\label{fig:analexp1}
+}
+\hfill
+\subfloat[Análise experimental com parâmetros $22 \le N \le 1000 $ (1000 pontos) e $\sigma = 10\%$]{
+	\includegraphics[width=0.45\linewidth]{../images/analiseExp_s10.png}
+	\label{fig:analexp2}
+}
+\end{figure}
+\begin{figure}[H]
+	\subfloat[Análise experimental com parâmetros $6 \le N \le 1000 $ (1000 pontos) e $\sigma = 50\%$]{
+		\includegraphics[width=0.45\linewidth]{../images/analiseExp_s50.png}
+		\label{fig:analexp1}
+	}
+	\hfill
+	\subfloat[Análise experimental com parâmetros $4 \le N \le 1000 $ (1000 pontos) e $\sigma = 100\%$]{
+		\includegraphics[width=0.45\linewidth]{../images/analiseExp_s10.png}
+		\label{fig:analexp2}
+	}
+\end{figure}
 \end{document}
