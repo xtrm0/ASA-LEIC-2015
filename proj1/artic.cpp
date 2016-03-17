@@ -14,9 +14,7 @@ vector<bool> AP; //É Articulation Point?
 /* dfs: Corre o dfs-visit do algoritmo de Tarjan
  * Devolve: O número de filhos na àrvore DFS
 
- * O código é baseado no algoritmo dfs do ch22.pdf das aulas teóricas,
- adicionando a parte da procura de Articulation Points, e usando o vetor d para
- guardar informação sobre a cor (havendo apenas as cores branco e preto).
+ * Baseado no biconnected components algorithm descrito em http://doi.acm.org/10.1145/362248.362272
  */
 int dfs(int u) {
   int ret=0;
