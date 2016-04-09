@@ -1,4 +1,4 @@
-#include <iostream>
+#include <cstdio>
 #include <vector>
 #include <algorithm>
 using namespace std;
@@ -37,15 +37,12 @@ int dfs(int u) {
 }
 
 int main() {
-  /* Faz o IO ser mais rápido: */
-  ios_base::sync_with_stdio(0);cin.tie(0);
-
   /* Processa o input */
-  cin >> N >> L;
+  scanf("%d %d", &N, &L);
   G = vector<vector<int> >(N+1, vector<int>());
   for (int i=1; i<=L; i++) {
     int u, v;
-    cin >> u >> v;
+    scanf("%d %d", &u, &v);
     G[u].push_back(v);
     G[v].push_back(u);
   }
@@ -63,18 +60,14 @@ int main() {
 
   /* Imprime os resultados: */
   int apCount = 0;
-  int first=-1, last=-1;
+  int m=-1, M=-1;
   for (int u=1; u<=N; u++) {
     if (AP[u]) {
       apCount++;
-      if (first == -1) first = u;
-      last = u;
+      if (m == -1) m = u;
+      M = u;
     }
   }
 
-  cout << apCount << endl;
-  if (apCount != 0)
-    cout << first << " " << last << endl;
-  else
-    cout << "-1" << " " << "-1" << endl;
+  printf("%d\n%d %d\n", apCount, m, M);
 }
