@@ -117,9 +117,8 @@ int main() {
     printf("N\n");
   } else {
     printf("%d %d\n", ind, best);
-    printf("%d", sp[0][ind]);
-    for (int j=1; j<F; j++)
-      printf(" %d", sp[j][ind]);
+    for (int j=0; j<F; j++)
+      printf("%d ", sp[j][ind]);
     printf("\n");
   }
 }
