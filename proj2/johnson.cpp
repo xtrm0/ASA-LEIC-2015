@@ -1,8 +1,5 @@
 #include <bits/stdc++.h>
 #define INFNTY numeric_limits<int>::max()
-#if __cplusplus <= 199711L
-#define move(X) X
-#endif
 using namespace std;
 typedef pair<int,int> pii;
 typedef vector<vector<pii > > Graph;
@@ -33,7 +30,7 @@ vector<int> reweight(Graph &G) {
 }
 
 //Dijkstra algorithm
-vector<int> dijkstra(Graph &G, int s) noexcept {
+vector<int> dijkstra(Graph &G, int s) {
   int w, u;
   set<pii> Q;
   vector<int> best = vector<int>(G.size(), INFNTY);
