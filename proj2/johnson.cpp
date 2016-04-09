@@ -33,29 +33,24 @@ vector<int> reweight(Graph &G) {
 }
 
 //Dijkstra algorithm
-vector<int> dijkstra(Graph &G, int s) {
+vector<int> dijkstra(Graph &G, int s) noexcept {
+  int w, u;
+  set<pii> Q;
   vector<int> best = vector<int>(G.size(), INFNTY);
   best[0] = 0;
-  set<pii> Q;
   Q.insert(pii(0,s));
 
-  int w, u;
   while(!Q.empty()) {
     w = Q.begin()->first; //find min
     u = Q.begin()->second;
     Q.erase(Q.begin()); //delete min
     vector<pii>::iterator end = G[u].end();
     for (vector<pii>::iterator it=G[u].begin(); it != end; it++) {
-      if (w + it->first < best[it->second]) {
-        //update min
-        if (best[it->second] == INFNTY) {
-          best[it->second] = w + it->first;
-          Q.insert(pii(best[it->second], it->second));
-        } else {
+      if (w + it->first < best[it->second]) {//update min
+        if (best[it->second] != INFNTY)
           Q.erase(Q.find(pii(best[it->second], it->second)));
-          best[it->second] = w + it->first;
-          Q.insert(pii(best[it->second], it->second));
-        }
+        best[it->second] = w + it->first;
+        Q.insert(pii(best[it->second], it->second));
       }
     }
   }
@@ -69,7 +64,7 @@ vector<vector<int> > johnsons(Graph &G, vector<int> f) {
   vector<vector<int> > ret = vector<vector<int> >();
   vector<int> h = reweight(G);//bellman-ford to calc reweight function
   for (size_t i=0; i<f.size(); i++) {
-    ret.push_back(move(dijkstra(G, f[i])));//run dijkstra
+    ret.push_back(dijkstra(G, f[i]));//run dijkstra
     for (size_t j=1; j<G.size(); j++) {//fix weights:
       if (ret[i][j] != INFNTY)
         ret[i][j] += h[j] - h[f[i]];
