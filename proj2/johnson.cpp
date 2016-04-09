@@ -1,5 +1,8 @@
 #include <bits/stdc++.h>
 #define INFNTY numeric_limits<int>::max()
+#if __cplusplus <= 199711L
+#define move(X) X
+#endif
 using namespace std;
 typedef pair<int,int> pii;
 typedef vector<vector<pii > > Graph;
@@ -66,7 +69,7 @@ vector<vector<int> > johnsons(Graph &G, vector<int> f) {
   vector<vector<int> > ret = vector<vector<int> >();
   vector<int> h = reweight(G);//bellman-ford to calc reweight function
   for (size_t i=0; i<f.size(); i++) {
-    ret.push_back(dijkstra(G, f[i]));//run dijkstra
+    ret.push_back(move(dijkstra(G, f[i])));//run dijkstra
     for (size_t j=1; j<G.size(); j++) {//fix weights:
       if (ret[i][j] != INFNTY)
         ret[i][j] += h[j] - h[f[i]];
