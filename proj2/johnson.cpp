@@ -1,4 +1,5 @@
 #include <bits/stdc++.h>
+#include "./fibHeap.hpp"
 #define INFNTY numeric_limits<int>::max()
 using namespace std;
 typedef pair<int,int> pii;
@@ -32,9 +33,9 @@ vector<int> reweight(Graph &G) {
 //Dijkstra algorithm
 vector<int> dijkstra(Graph &G, int s) {
   int w, u;
-  set<pii> Q;
+  set<pii> Q; //no need for multiset
   vector<int> best = vector<int>(G.size(), INFNTY);
-  best[0] = 0;
+  best[s] = 0;
   Q.insert(pii(0,s));
 
   while(!Q.empty()) {
@@ -54,6 +55,34 @@ vector<int> dijkstra(Graph &G, int s) {
   return best;
 }
 
+//Dijkstra algorithm
+vector<int> dijkstra_fib(Graph &G, int s) {
+  int w, u;
+  vector<int> best = vector<int>(G.size(), INFNTY);
+  vector<Node<pii>*> pos = vector<Node<pii>*>(G.size(), NULL);
+  FibHeap<pii> Q;
+  best[s] = 0;
+  pos[s] = Q.insert(pii(0,s));
+
+
+  while(!Q.empty()) {
+    w = Q.top().first; //find min
+    u = Q.top().second;
+    Q.pop();
+    vector<pii>::iterator end = G[u].end();
+    for (vector<pii>::iterator it=G[u].begin(); it != end; it++) {
+      if (w + it->first < best[it->second]) {//update min
+        if (best[it->second] != INFNTY)
+          Q.decrease_key(pos[it->second], pii(w + it->first, it->second));
+        else
+          pos[it->second] = Q.insert(pii(w + it->first, it->second));
+        best[it->second] = w + it->first;
+      }
+    }
+  }
+  return best;
+}
+
 //Applies johnson's algorithm on G, using the vertexes in f as sources
 //The return vector is an associative version:
 //ret[i][j] := minimum distance from f[i] to j
@@ -61,7 +90,7 @@ vector<vector<int> > johnsons(Graph &G, vector<int> f) {
   vector<vector<int> > ret = vector<vector<int> >();
   vector<int> h = reweight(G);//bellman-ford to calc reweight function
   for (size_t i=0; i<f.size(); i++) {
-    ret.push_back(dijkstra(G, f[i]));//run dijkstra
+    ret.push_back(dijkstra_fib(G, f[i]));//run dijkstra
     for (size_t j=1; j<G.size(); j++) {//fix weights:
       if (ret[i][j] != INFNTY)
         ret[i][j] += h[j] - h[f[i]];
@@ -97,14 +126,15 @@ int main() {
   for (int i=1, curr; i<=N; i++) {
     curr = 0;
     for (int j=0; j<F; j++) {
-      if (sp[j][i] == INFNTY) goto retry;
-      curr += sp[j][i];
+      if (sp[j][i] == INFNTY || curr == INFNTY)
+        curr = INFNTY;
+      else
+        curr += sp[j][i];
     }
     if (curr < best) {
       best = curr;
       ind = i;
     }
-    retry:;
   }
 
   //Imprime os resultados:
