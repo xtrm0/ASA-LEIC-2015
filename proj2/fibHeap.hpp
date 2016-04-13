@@ -109,8 +109,8 @@ private:
 
   void cut(Node<T> *x, Node<T> *y) {
     if(x != x->r) {
-      x->r->r = x->l;
-      x->l->l = x->r;
+      x->r->l = x->l;
+      x->l->r = x->r;
       y->c = x->r;
     } else {
       y->c = NULL;

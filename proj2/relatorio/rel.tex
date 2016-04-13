@@ -58,13 +58,46 @@ Com este projeto pretendemos expor um algoritmo em tempo linear para o problema 
 \section*{Prova de correção do algoritmo}
 
 \section*{Análise assintótica temporal téorica do algoritmo}
+Para a implementaçao com a fibonnaci heap, temos a complexidade:
+\begin{subequations}
+	\begin{align}
+		& O(VE + F(E + VlogV))
+		\shortintertext{Uma vez que F $\leq$ V:}
+		& O(VE + FVlogV))
+	\end{align}
+\end{subequations}
+%TODO: provar
+
+Para a implementação com a binary heap, temos:
+\begin{subequations}
+	\begin{align}
+	& O(VE + F(E + ElogE))
+	\shortintertext{Uma vez que E < $V^2$:}
+	& O(VE + FE + FElogV))
+	\shortintertext{E que F $\leq$ V:}
+    & O(VE + FElogV))
+	\end{align}
+\end{subequations}
+%TODO explicar forma de escolha entre binary heap e fibonnaci heap
+
+Para grafos densos (E proporcional a $V^2$), na implementação com fibonnaci heap , temos:
+\begin{subequations}
+	\begin{align}
+	& O(V*V^2 + FVlogV))\\
+	\shortintertext{Uma vez que F $\leq$ V:}
+	& O(V^3)
+	\end{align}
+\end{subequations}
+Que é a mesma complexidade que teriamos com o algoritmo de Floyd-Warshall, no entanto devido ao overhead associado às estruras de dados utilizadas, a implementação com Floyd-Warshall será bastante mais rápida para grafos densos. Como para o problema em análise estamos a analisar grafos esparsos, o nosso algoritmos tem uma eficiência bastante superior ao de Floyd-Warshall.
 
 \section*{Análise assintótica temporal experimental do algoritmo}
+Devido ao facto de as fibonnaci heaps terem uma grande constante temporal em relação às binary heaps, isto é, só serem mais rápidas que as binary heaps para V e E grande, começámos por executar o algoritmo de dijkstra separadamente e fizemos um gráficos das instruções executadas em função de V e de E para ambas as implementações (figura \ref{fig:TODO}). Com base neste gráfico, foi possível concluir que a versão com fibonnaci heaps era superior para %TODO
 
 \section*{Análise assintótica espacial}
+ezpz
 
 \section*{Prova de otimalidade do algoritmo}
-
+Em relação à parte do nosso probelma relativa a resolver SSSP, existem outras formas de resolver o problema assintóticamente melhores \cite{Raman:1997}, no entanto, a nossa implementação foi aquela que considerámos mais próxima do conteúdo das aulas e 
 \bibliography{ref}
 
 \end{document}
