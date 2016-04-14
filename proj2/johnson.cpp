@@ -31,7 +31,7 @@ vector<int> reweight(Graph &G) {
 }
 
 //Dijkstra algorithm
-vector<int> dijkstra(Graph &G, int s) {
+vector<int> dijkstra_basic(Graph &G, int s) {
   int w, u;
   set<pii> Q; //no need for multiset
   vector<int> best = vector<int>(G.size(), INFNTY);
@@ -86,15 +86,31 @@ vector<int> dijkstra_fib(Graph &G, int s) {
 //Applies johnson's algorithm on G, using the vertexes in f as sources
 //The return vector is an associative version:
 //ret[i][j] := minimum distance from f[i] to j
-vector<vector<int> > johnsons(Graph &G, vector<int> f) {
-  vector<vector<int> > ret = vector<vector<int> >();
+pair<pii, vector<int> > johnsons(Graph &G, vector<int> f, vector<int> (*dij)(Graph &, int)) {
+
+  vector<int> ans = vector<int>(G.size(), 0);
+  pair<pii,vector<int> > ret = pair<pii, vector<int> >(pii(INFNTY,INFNTY), vector<int>());
   vector<int> h = reweight(G);//bellman-ford to calc reweight function
   for (size_t i=0; i<f.size(); i++) {
-    ret.push_back(dijkstra_fib(G, f[i]));//run dijkstra
+    vector<int> dr = dij(G, f[i]);//run dijkstra
     for (size_t j=1; j<G.size(); j++) {//fix weights:
-      if (ret[i][j] != INFNTY)
-        ret[i][j] += h[j] - h[f[i]];
+      if (dr[j] == INFNTY) {
+        ans[j] = INFNTY;
+      } else if (ans[j] != INFNTY) {
+          ans[j] += dr[j] + h[j] - h[f[i]];
+      }
     }
+  }
+  for (size_t i=1; i<G.size(); i++) {
+    if (ans[i] < ret.first.second) {
+      ret.first.second = ans[i];
+      ret.first.first = i;
+    }
+  }
+  if (ret.first.second == INFNTY) return ret;
+  for (size_t i=0; i<f.size(); i++) {
+    vector<int> dr = dij(G, f[i]);//run dijkstra
+    ret.second.push_back(dr[ret.first.first]+ h[ret.first.first] - h[f[i]]);
   }
   return ret;
 }
@@ -117,33 +133,16 @@ int main() {
     G[u].push_back(pii(w,v));
   }
 
-  //Obtem distancias minimas:
-  vector<vector<int> > sp = johnsons(G, f);
-
-  //Calcula o melhor local para o encontro
-  int best = INFNTY;
-  int ind  = 0;
-  for (int i=1, curr; i<=N; i++) {
-    curr = 0;
-    for (int j=0; j<F; j++) {
-      if (sp[j][i] == INFNTY || curr == INFNTY)
-        curr = INFNTY;
-      else
-        curr += sp[j][i];
-    }
-    if (curr < best) {
-      best = curr;
-      ind = i;
-    }
-  }
+  //Obtem distancias minimas
+  pair<pii, vector<int> > sp = johnsons(G, f, dijkstra_basic);
 
   //Imprime os resultados:
-  if (best == INFNTY) {
+  if (sp.first.second == INFNTY) {
     printf("N\n");
   } else {
-    printf("%d %d\n", ind, best);
+    printf("%d %d\n", sp.first.first, sp.first.second);
     for (int j=0; j<F; j++)
-      printf("%d ", sp[j][ind]);
+      printf("%d ", sp.second[j]);
     printf("\n");
   }
 }

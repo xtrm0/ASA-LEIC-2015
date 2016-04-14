@@ -1,5 +1,6 @@
 #define FH_MAX_RANK 16
 //HEAP suporta no maximo 2^(FH_MAX_RANK-1) elementos
+template <class T> class FibHeap;
 
 template <class T>
 struct Node {
@@ -14,6 +15,8 @@ struct Node {
     mark = false;
     key = x;
   }
+
+private:
   //Merges two circular lists
   void merge(Node<T>* o){
     Node<T> *aux1, *aux2;
@@ -58,6 +61,7 @@ struct Node {
       this->mark = false;
     } while(p!=this);
   }
+  friend class  FibHeap<T>;
 };
 
 template <class T>
