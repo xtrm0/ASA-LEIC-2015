@@ -40,8 +40,10 @@ if [ -n "$1" ]; then
                   tput sgr0
                   echo -n "N: "
                   head -n 1 "$TEST.in" | cut -f 1 -d" "
-                  echo -n "L: "
+                  echo -n "F: "
                   head -n 1 "$TEST.in" | cut -f 2 -d" "
+                  echo -n "E: "
+                  head -n 1 "$TEST.in" | cut -f 3 -d" "
                   cnt=$(perf stat -x, -e instructions:u ./../a.out < "$TEST.in" 2>&1 >/dev/null)
                   echo -n "I: "
                   echo $cnt | cut -d"," -f 1
