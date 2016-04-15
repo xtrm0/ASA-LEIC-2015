@@ -214,7 +214,7 @@ int main() {
   }
 
   //Obtem distancias minimas
-  pair<pii, vector<int> > sp = johnsons(G, f, dijkstra_set);
+  pair<pii, vector<int> > sp = johnsons(G, f, dijkstra_fib);
 
   //Imprime os resultados:
   if (sp.first.second == INFNTY) {
