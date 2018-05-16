@@ -1,13 +1,14 @@
 #!/bin/bash
 #ficheiro que corre todos os testes automaticamente no pc
 set -e
-#TESTDIR="./randomTests"
-TESTDIR="tests"
+TESTDIR="randomTests_6"
+#TESTDIR="tests"
 CURR=`pwd`
 
 #compila
 echo -ne "\e[34mCompiling... "
 g++ -Wall -O3 -Ofast -std=c++11 ./johnson.cpp && echo -e "\e[32mok" || exit 1
+javac Graph.java
 
 #corre os testes:
 cd $TESTDIR
@@ -22,7 +23,8 @@ for i in $( ls | grep ".in" );
                 TEST=${i%.in}
                 echo -ne "\e[36m$TEST.in: "
                 tput sgr0
-                ./../a.out < "$TEST.in" > out
+                #java -cp ../ Graph < "$TEST.in" > out
+                ../a.out < "$TEST.in" > out
                 diff "$TEST.out" out | colordiff && echo -e "\e[32mok" || exit 1
         done
 fi;
@@ -42,7 +44,7 @@ if [ -n "$1" ]; then
                   head -n 1 "$TEST.in" | cut -f 1 -d" "
                   echo -n "F: "
                   head -n 1 "$TEST.in" | cut -f 2 -d" "
-                  echo -n "E: "
+                  echo -n "C: "
                   head -n 1 "$TEST.in" | cut -f 3 -d" "
                   cnt=$(perf stat -x, -e instructions:u ./../a.out < "$TEST.in" 2>&1 >/dev/null)
                   echo -n "I: "

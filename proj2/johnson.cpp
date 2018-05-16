@@ -6,6 +6,8 @@ using namespace std;
 typedef pair<int,int> pii;
 typedef vector<vector<pii > > Graph;
 
+
+//Executa o bellman-ford a partir de um superno e faz a repesagem do grafo
 vector<int> reweight(Graph &G) {
   vector<int> ret = vector<int>(G.size(), 0);
   for (size_t i=1, cnt=1; i<G.size() && cnt; i++) {
@@ -163,49 +165,48 @@ vector<int> dijkstra_binary(Graph &G, int s) {
   }
   return best;
 }
-//Applies johnson's algorithm on G, using the vertexes in f as sources
-//The return vector is an associative version:
-//ret[i][j] := minimum distance from f[i] to j
-pair<pii, vector<int> > johnsons(Graph &G, vector<int> f, vector<int> (*dij)(Graph &, int)) {
+//Applies johnson's algorithm on G, using the vertexes in S as sources
+//The return vector is the answer to the problem
+pair<pii, vector<int> > johnsons(Graph &G, vector<int> S, vector<int> (*dij)(Graph &, int)) {
 
-  vector<int> ans = vector<int>(G.size(), 0);
+  vector<int> P = vector<int>(G.size(), 0);
   pair<pii,vector<int> > ret = pair<pii, vector<int> >(pii(INFNTY,INFNTY), vector<int>());
   vector<int> h = reweight(G);//bellman-ford to calc reweight function
-  for (size_t i=0; i<f.size(); i++) {
-    vector<int> dr = dij(G, f[i]);//run dijkstra
+  for (size_t i=0; i<S.size(); i++) {
+    vector<int> dr = dij(G, S[i]);//run dijkstra
     for (size_t j=1; j<G.size(); j++) {//fix weights:
       if (dr[j] == INFNTY) {
-        ans[j] = INFNTY;
-      } else if (ans[j] != INFNTY) {
-          ans[j] += dr[j] + h[j] - h[f[i]];
+        P[j] = INFNTY;
+      } else if (P[j] != INFNTY) {
+          P[j] += dr[j] + h[j] - h[S[i]];
       }
     }
   }
   for (size_t i=1; i<G.size(); i++) {
-    if (ans[i] < ret.first.second) {
-      ret.first.second = ans[i];
+    if (P[i] < ret.first.second) {
+      ret.first.second = P[i];
       ret.first.first = i;
     }
   }
   if (ret.first.second == INFNTY) return ret;
-  for (size_t i=0; i<f.size(); i++) {
-    vector<int> dr = dij(G, f[i]);//run dijkstra
-    ret.second.push_back(dr[ret.first.first]+ h[ret.first.first] - h[f[i]]);
+  for (size_t i=0; i<S.size(); i++) {
+    vector<int> dr = dij(G, S[i]);//run dijkstra
+    ret.second.push_back(dr[ret.first.first]+ h[ret.first.first] - h[S[i]]);
   }
   return ret;
 }
 
 int main() {
   int N, F, C;
-  vector<int> f;
+  vector<int> S;
   Graph G; //graph representation
 
   //Input:
   scanf("%d %d %d", &N, &F, &C);
-  f = vector<int>();
+  S = vector<int>();
   for (int i=1, aux; i<=F; i++) {
     scanf("%d", &aux);
-    f.push_back(aux);
+    S.push_back(aux);
   }
   G = Graph(N+1, vector<pii>());
   for (int i=1, u, v, w; i<=C; i++) {
@@ -214,7 +215,7 @@ int main() {
   }
 
   //Obtem distancias minimas
-  pair<pii, vector<int> > sp = johnsons(G, f, dijkstra_fib);
+  pair<pii, vector<int> > sp = johnsons(G, S, dijkstra_fib);
 
   //Imprime os resultados:
   if (sp.first.second == INFNTY) {
